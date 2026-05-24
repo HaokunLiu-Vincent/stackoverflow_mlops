@@ -55,3 +55,4 @@ After a model has been trained and saved to `artifacts/final_model/`:
 ```bash
 python predict.py "The company reported strong quarterly earnings and positive market sentiment."
 ```
+# CI/CD test
