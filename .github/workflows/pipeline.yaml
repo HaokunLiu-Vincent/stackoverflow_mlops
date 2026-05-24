@@ -1,44 +1,38 @@
-name: ClearML Pipeline CI/CD
+name: Run ClearML Task
 
 on:
+  push:
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  smoke-test:
+  run_pipeline:
     runs-on: ubuntu-latest
+    env:
+      CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
+      CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
+      CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install clearml datasets pandas scikit-learn
+          pip install -r requirements.txt
 
-      - name: Configure ClearML
-        env:
-          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
-          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
-          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
+      - name: Debug ENV
         run: |
-          python -c "
-          from clearml import Task
-          task = Task.init(project_name='CI_Smoke_Test', task_name='connectivity_check', reuse_last_task_id=True)
-          task.close()
-          print('ClearML connectivity verified successfully')
-          "
+          echo "CLEARML_API_HOST=$CLEARML_API_HOST"
+          if [ -z "$CLEARML_API_HOST" ]; then echo "❌ HOST is empty!"; exit 1; fi
+          curl -I $CLEARML_API_HOST
 
-      - name: Run dataset artifact smoke test
-        env:
-          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
-          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
-          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
+      - name: Run pipeline
         run: |
           python hpo_s1_dataset_artifact.py
