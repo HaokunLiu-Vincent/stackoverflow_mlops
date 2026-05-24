@@ -4,6 +4,11 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
+  CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
+  CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
+
 jobs:
   smoke-test:
     runs-on: ubuntu-latest
@@ -12,21 +17,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.12.3
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12.3'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install clearml datasets pandas scikit-learn
 
-      - name: Configure ClearML
-        env:
-          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
-          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
-          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
+      - name: Verify ClearML connectivity
         run: |
           python -c "
           from clearml import Task
@@ -36,9 +37,5 @@ jobs:
           "
 
       - name: Run dataset artifact smoke test
-        env:
-          CLEARML_API_ACCESS_KEY: ${{ secrets.CLEARML_API_ACCESS_KEY }}
-          CLEARML_API_SECRET_KEY: ${{ secrets.CLEARML_API_SECRET_KEY }}
-          CLEARML_API_HOST: ${{ secrets.CLEARML_API_HOST }}
         run: |
           python hpo_s1_dataset_artifact.py
