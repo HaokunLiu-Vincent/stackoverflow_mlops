@@ -34,7 +34,10 @@ raw_dataset = Dataset.get(dataset_id=dataset_task.get_parameter('General/dataset
 logger.info(f"Loaded raw dataset: {raw_dataset.name}")
 
 # Get the raw data
-dataset_path = raw_dataset.get_mutable_local_copy("financial_phrasebank_raw")
+# dataset_path = raw_dataset.get_mutable_local_copy("financial_phrasebank_raw")
+# To this:
+dataset_path = raw_dataset.get_local_copy()
+
 raw_data = pd.read_csv(os.path.join(dataset_path, "financial_phrasebank_raw.csv"))
 logger.info(f"Successfully loaded raw data: {len(raw_data)} rows")
 
