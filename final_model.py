@@ -5,6 +5,7 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from clearml import Task, Dataset
+import accelerate  # required by transformers Trainer
 import torch
 import numpy as np
 import pandas as pd
