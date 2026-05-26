@@ -25,7 +25,7 @@ task = Task.init(
 args = {
     'base_train_task_id': '',  # Will be set from pipeline
     'num_trials': 6,
-    'time_limit_minutes': 5,
+    'time_limit_minutes': 30,
     'run_as_service': False,
     'test_queue': 'hpo_finance',  # Queue for test tasks
     'processed_dataset_id': '',  # Will be set from pipeline
@@ -85,7 +85,7 @@ hpo_task = HyperParameterOptimizer(
     objective_metric_title='validation',
     objective_metric_series='f1',
     objective_metric_sign='max',
-    max_number_of_concurrent_tasks=1,
+    max_number_of_concurrent_tasks=2,
     optimization_time_limit=args['time_limit_minutes'] * 60,
     compute_time_limit=None,
     total_max_jobs=args['num_trials'],
