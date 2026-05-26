@@ -36,3 +36,8 @@ jobs:
       - name: Run pipeline
         run: |
           python hpo_s1_dataset_artifact.py
+          python hpo_s2_process_dataset.py
+          python hpo_s3_train_model.py
+          python task_hpo.py
+          python final_model.py
+          
