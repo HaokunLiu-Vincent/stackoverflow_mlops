@@ -1,0 +1,35 @@
+# Model files
+deployment/model/
+*.tar.gz
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+*.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# ClearML
+.clearml/
+
+# IDE
+.vscode/
+.idea/
+
+# Data processing
+financial_phrasebank_raw/
+processed_data/
+
+# Training artifacts
+assets/
+figs/
+artifacts/
